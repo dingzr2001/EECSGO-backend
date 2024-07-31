@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eecsgo.mapper.UserMapper">
+    <insert id="addUser">
+        insert into users (username, email, password, register_date, `role`)
+        values (#{registerRequest.username}, #{registerRequest.email}, #{registerRequest.password},
+                #{registerDate}, #{role})
+    </insert>
+    <update id="upgradeUserRole">
+        update users set `role` = #{role}
+        where id = #{operatedUserId} and `role` &lt; ${role}
+    </update>
+    <select id="login" resultType="com.eecsgo.entity.User">
+        select * from users where email = #{email} and password = #{password}
+    </select>
+    <select id="getUserById" resultType="com.eecsgo.entity.User">
+        select * from users where id = #{id}
+    </select>
+    <select id="checkDuplicateUsername" resultType="java.lang.Integer">
+        select count(*) from users where username = #{username}
+    </select>
+    <select id="checkDuplicateEmail" resultType="java.lang.Integer">
+        select count(*) from users where email = #{email}
+    </select>
+    <select id="getUserRole" resultType="java.lang.Integer">
+        select `role` from users where id = #{userId}
+    </select>
+    <select id="getUserList" resultType="com.eecsgo.entity.User">
+        select * from users limit #{rowOffset}, #{pageSize}
+    </select>
+</mapper>

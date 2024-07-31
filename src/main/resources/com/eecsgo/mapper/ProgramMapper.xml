@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eecsgo.mapper.ProgramMapper">
+
+    <select id="getProgram" resultType="com.eecsgo.entity.Program">
+        select * from programs
+        <where>
+            <if test="nameAbbr != null">
+                name_abbr = #{nameAbbr}
+            </if>
+            <if test="university != null">
+                and university = #{university}
+            </if>
+            <if test="name != null">
+                 and `name` = #{name}
+            </if>
+            <if test="major != null">
+                and major = #{major}
+            </if>
+        </where>
+    </select>
+    <select id="checkDuplicateProgram" resultType="java.lang.Integer">
+        select count(*) from programs
+        <where>
+            name_abbr = #{nameAbbr}
+        </where>
+    </select>
+    <select id="checkDuplicateAuditProgram" resultType="java.lang.Integer">
+        select count(*) from audit_programs
+        <where>
+            name_abbr = #{nameAbbr}
+        </where>
+    </select>
+    <select id="getAuditProgramList" resultType="com.eecsgo.entity.AuditProgram">
+        select * from audit_programs
+        limit #{rowOffset}, #{pageSize}
+    </select>
+    <insert id="insertProgram">
+        insert into programs ( name_abbr, university, `name`, url, `major`, region, location, toefl, toefl_l, toefl_r, toefl_s, toefl_w,
+                               ielts, ielts_l, ielts_r, ielts_s, ielts_w, min_duration, max_duration) values
+        (#{programRequest.nameAbbr}, #{programRequest.university}, #{programRequest.name}, #{programRequest.url},
+         #{programRequest.major}, #{programRequest.region}, #{programRequest.location},
+         #{programRequest.toefl}, #{programRequest.toeflL}, #{programRequest.toeflR}, #{programRequest.toeflS}, #{programRequest.toeflW},
+         #{programRequest.ielts}, #{programRequest.ieltsL}, #{programRequest.ieltsR}, #{programRequest.ieltsS}, #{programRequest.ieltsW},
+         #{programRequest.minDuration}, #{programRequest.maxDuration})
+    </insert>
+    <insert id="insertAuditProgram">
+        insert into audit_programs ( name_abbr, university, `name`, url, `major`, region, location, toefl, toefl_l, toefl_r, toefl_s, toefl_w,
+                               ielts, ielts_l, ielts_r, ielts_s, ielts_w, min_duration, max_duration, creator_id, audit_status) values
+            (#{programRequest.nameAbbr}, #{programRequest.university}, #{programRequest.name}, #{programRequest.url},
+            #{programRequest.major}, #{programRequest.region}, #{programRequest.location},
+            #{programRequest.toefl}, #{programRequest.toeflL}, #{programRequest.toeflR}, #{programRequest.toeflS}, #{programRequest.toeflW},
+            #{programRequest.ielts}, #{programRequest.ieltsL}, #{programRequest.ieltsR}, #{programRequest.ieltsS}, #{programRequest.ieltsW},
+            #{programRequest.minDuration}, #{programRequest.maxDuration},
+            #{creatorId},#{auditStatus})
+    </insert>
+    <delete id="deleteProgram">
+        delete from programs where id = #{id}
+    </delete>
+    <delete id="deleteAuditProgram">
+        delete from audit_programs where id = #{id}
+    </delete>
+</mapper>
+

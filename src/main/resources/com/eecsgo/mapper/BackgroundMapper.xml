@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eecsgo.mapper.BackgroundMapper">
+
+    <insert id="addBg">
+        INSERT INTO background (
+            undergrad_university, undergrad_major, undergrad_dual, undergrad_minor,
+            `avg`, gpa, gpa_scale, language_type, language_overall,
+            listening, reading, speaking, writing, gre_v, gre_q, gre_aw,
+            exchange, pub, research, internship, project, rl, user_id,
+            create_date
+        ) VALUES (
+            #{addBgRequest.undergradUniversity}, #{addBgRequest.undergradMajor}, #{addBgRequest.undergradDual},
+            #{addBgRequest.undergradMinor}, #{addBgRequest.avg},#{addBgRequest.gpa},
+            #{addBgRequest.gpaScale}, #{addBgRequest.languageType}, #{addBgRequest.languageOverall},
+            #{addBgRequest.listening}, #{addBgRequest.reading}, #{addBgRequest.speaking},
+            #{addBgRequest.writing}, #{addBgRequest.greV}, #{addBgRequest.greQ},
+            #{addBgRequest.greAw}, #{addBgRequest.exchange}, #{addBgRequest.pub},
+            #{addBgRequest.research}, #{addBgRequest.internship}, #{addBgRequest.project},
+            #{addBgRequest.rl}, #{creatorId}, #{createDate}
+        )
+    </insert>
+    <select id="getBg" resultType="com.eecsgo.entity.Background">
+        select * from background where user_id = #{creatorId}
+    </select>
+</mapper>

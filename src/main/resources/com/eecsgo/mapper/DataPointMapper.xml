@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eecsgo.mapper.DataPointMapper">
+
+    <select id="getDpsByProgramId" resultMap="dataPointWithBackgroundResult">
+        SELECT dp.*,bg.*,u.username
+        FROM
+            datapoints dp
+                LEFT JOIN
+            background bg ON dp.bg_id = bg.id
+                LEFT JOIN
+            users u ON bg.user_id = u.id
+        WHERE
+            dp.program_id = #{programId}
+        ORDER BY
+            dp.id
+        limit #{rowOffset}, #{pageSize}
+    </select>
+    <resultMap id="dataPointWithBackgroundResult" type="com.eecsgo.entity.DataPoint">
+        <id property="id" column="id"/>
+        <result property="programId" column="program_id"/>
+        <result property="track" column="track"/>
+        <result property="result" column="result"/>
+        <result property="bgId" column="bg_id"/>
+        <result property="submitDate" column="submit_date"/>
+        <result property="informDate" column="inform_date"/>
+        <result property="createDate" column="create_date"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="creatorUsername" column="username"/>
+        <association property="bg" javaType="com.eecsgo.entity.Background">
+            <id property="id" column="bg_id"/>
+            <result property="undergradUniversity" column="undergrad_university"/>
+            <result property="undergradMajor" column="undergrad_major"/>
+            <result property="undergradDual" column="undergrad_dual"/>
+            <result property="undergradMinor" column="undergrad_minor"/>
+            <result property="avg" column="avg"/>
+            <result property="gpa" column="gpa"/>
+            <result property="gpaScale" column="gpa_scale"/>
+            <result property="languageType" column="language_type"/>
+            <result property="languageOverall" column="language_overall"/>
+            <result property="listening" column="listening"/>
+            <result property="reading" column="reading"/>
+            <result property="speaking" column="speaking"/>
+            <result property="writing" column="writing"/>
+            <result property="greV" column="gre_v"/>
+            <result property="greQ" column="gre_q"/>
+            <result property="greAw" column="gre_aw"/>
+            <result property="exchange" column="exchange"/>
+            <result property="pub" column="pub"/>
+            <result property="research" column="research"/>
+            <result property="internship" column="internship"/>
+            <result property="project" column="project"/>
+            <result property="rl" column="rl"/>
+            <result property="userId" column="user_id"/>
+            <result property="createDate" column="create_date"/>
+        </association>
+    </resultMap>
+
+    <select id="getDpCounts" resultType="java.lang.Integer">
+        select count(*) from datapoints where program_id = #{programId}
+    </select>
+    <select id="checkDuplicateDp" resultType="java.lang.Integer">
+        select count(*)
+        from datapoints
+        where program_id = #{programId} and creator_id = #{creatorId} and bg_id = #{bgId}
+    </select>
+    <insert id="addDp" useGeneratedKeys="true">
+        insert into datapoints (
+            program_id, track, `result`, bg_id, submit_date, inform_date, creator_id, create_date
+        ) VALUES (
+            #{addDpRequest.programId}, #{addDpRequest.track},
+            #{addDpRequest.result}, #{addDpRequest.bgId}, #{addDpRequest.submitDate}, #{addDpRequest.informDate},
+            #{creatorId}, #{createDate}
+            )
+    </insert>
+</mapper>
+
