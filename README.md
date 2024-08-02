@@ -1,2 +1,0 @@
-# EECSGO-backend
-eecsgo-backend
